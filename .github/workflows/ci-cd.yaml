@@ -48,13 +48,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
+          
+      - name: apply configuration
+        uses: hashicorp/setup-terraform@v3
 
-      # - name: Sync dist folder to S3
-      #   uses: jakejarvis/s3-sync-action@0.5.0
-      #   with:
-      #     args: --acl public-read --follow-symlinks --delete
-      #   env:
-      #     AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     SOURCE_DIR: ./dist
+      - name: apply the thing
+        run: |
+          cd terraform
+          terraform init -input=false
+          terraform plan -no-color -input=false
+          terraform apply -auto-approve
